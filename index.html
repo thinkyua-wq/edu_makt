@@ -1478,8 +1478,8 @@ function App() {
   /* ===== 사이드바 ===== */
   const MENUS = [
     { id: 'pkg', label: '패키지 활동보고', icon: 'package' },
-    { id: 'sp', label: '세미나 계획·실행', icon: 'barchart' },
-    { id: 'sc', label: '하부고객 확대현황', icon: 'users' },
+    { id: 'sp', label: '세미나교육활동', icon: 'barchart' },
+    { id: 'sc', label: '하부고객확대', icon: 'users' },
   ];
 
   const renderSidebar = () => (
@@ -1704,7 +1704,15 @@ function App() {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
-          <h2 className="text-2xl font-bold text-slate-900">하부고객 확대현황</h2>
+          <div className="flex items-baseline gap-3 flex-wrap">
+            <h2 className="text-2xl font-bold text-slate-900">하부고객 확대현황</h2>
+          </div>
+          <span className="text-xs text-slate-500 flex items-center gap-1">
+            <Icon name="refresh" className="w-3 h-3" /> 데이터 기준일: {new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+          </span>
+        </div>
+
+        <div className="flex items-center justify-end flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <button onClick={() => {
               const prevMonth = displayMonthSC - 1;
@@ -1722,11 +1730,11 @@ function App() {
               logChange(`7번 하부고객`, `${prevMonth}월 → ${monthLabelSC} 복사`);
               alert(`${prevMonth}월 데이터 → ${monthLabelSC}로 복사 완료!`);
             }}
-              className="px-3 py-1.5 text-xs border border-slate-300 rounded hover:bg-slate-50 flex items-center gap-1">
-              <Icon name="copy" className="w-3.5 h-3.5" /> 이전월 복사
+              className="px-2 py-1.5 text-sm border border-purple-300 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 font-semibold flex items-center gap-1.5">
+              <Icon name="copy" className="w-4 h-4" /> 이전월 복사
             </button>
-            <label className="px-3 py-1.5 text-xs border border-slate-300 rounded hover:bg-slate-50 flex items-center gap-1 cursor-pointer">
-              <Icon name="upload" className="w-3.5 h-3.5" /> 엑셀 업로드
+            <label className="px-2 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50 cursor-pointer flex items-center gap-1.5">
+              <Icon name="upload" className="w-4 h-4" /> 엑셀 업로드
               <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={(event) => {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -1793,8 +1801,12 @@ function App() {
               XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), `${monthLabelSC}_하부고객`);
               XLSX.writeFile(wb, `하부고객_${hq}_${yearMonthSC}.xlsx`);
             }}
-              className="px-3 py-1.5 text-xs border border-slate-300 rounded hover:bg-slate-50 flex items-center gap-1">
-              <Icon name="download" className="w-3.5 h-3.5" /> 양식/다운로드
+              className="px-2 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50 flex items-center gap-1.5">
+              <Icon name="download" className="w-4 h-4" /> 엑셀 다운로드
+            </button>
+            <button onClick={() => { logChange('하부고객', `저장 (${monthLabelSC})`); alert('저장되었습니다!'); }}
+              className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">
+              저장
             </button>
           </div>
         </div>
@@ -2803,6 +2815,31 @@ function App() {
       XLSX.writeFile(wb, `세미나_${tab === 'actual' ? '실행' : '계획'}_${hq}_${yearMonth}.xlsx`);
     };
 
+    // === 이전월 복사 (현재 탭 기준) ===
+    const handleCopyPrev = () => {
+      if (tab !== 'plan' && tab !== 'actual') { alert('이전월 복사는 [계획] 또는 [실행] 탭에서 사용해 주세요.'); return; }
+      if (isYear) { alert('연간(전체) 보기에서는 이전월 복사를 사용할 수 없습니다. 특정 월을 선택해 주세요.'); return; }
+      const prevMonth = displayMonth - 1;
+      if (prevMonth < 1) { alert('이전월이 없습니다 (1월에서는 사용 불가).'); return; }
+      const dataset = tab === 'actual' ? seminarActual : seminarPlan;
+      const prevRows = dataset.filter(r => (r.yearMonth || '') === `${curYear}-${prevMonth}` && inScope(r));
+      if (prevRows.length === 0) { alert(`${prevMonth}월에 복사할 ${tab === 'actual' ? '실행' : '계획'} 데이터가 없습니다.`); return; }
+      const curCount = dataset.filter(r => (r.yearMonth || '') === `${curYear}-${displayMonth}` && inScope(r)).length;
+      let msg = `${prevMonth}월의 ${prevRows.length}건을 ${displayMonth}월로 복사하시겠습니까?`;
+      if (curCount > 0) msg += `\n\n주의: ${displayMonth}월에 이미 ${curCount}건이 있습니다. 복사하면 기존에 추가됩니다.`;
+      if (!confirm(msg)) return;
+      const newRows = prevRows.map((r, i) => ({
+        ...r,
+        id: (tab === 'actual' ? 'act_' : 'plan_') + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 6),
+        yearMonth: `${curYear}-${displayMonth}`,
+      }));
+      const setter = tab === 'actual' ? setSeminarActual : setSeminarPlan;
+      setter(prev => [...prev, ...newRows]);
+      logChange('세미나교육활동', `${prevMonth}월 → ${displayMonth}월 ${tab === 'actual' ? '실행' : '계획'} 복사 (${newRows.length}건)`);
+      alert(`✅ ${prevMonth}월 → ${displayMonth}월 복사 완료! (${newRows.length}건)`);
+    };
+    // 상단 엑셀 업로드는 hidden input 트리거 방식이라 ref 없이 label로 처리 (아래 JSX)
+
     const th = "px-1.5 py-2 border-r border-slate-300 font-semibold text-slate-900 text-xs";
     const thSort = th + " cursor-pointer hover:bg-slate-200 select-none";
 
@@ -2821,7 +2858,32 @@ function App() {
               {scope === 'all' ? '중국법인(전체)' : hq} · {monthLabel}
             </span>
           </div>
-          <span className="text-xs text-slate-500">계획 {planAll.length}건 · 실행 {actualAll.length}건</span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-xs text-slate-500">계획 {planAll.length}건 · 실행 {actualAll.length}건</span>
+            <span className="text-xs text-slate-500 flex items-center gap-1">
+              <Icon name="refresh" className="w-3 h-3" /> 데이터 기준일: {new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        </div>
+
+        {/* 액션 버튼 (탭 공통, 현재 탭 기준 동작) */}
+        <div className="flex items-center justify-end gap-2 flex-wrap">
+          <button onClick={handleCopyPrev}
+            className="flex items-center gap-1.5 px-2 py-1.5 text-sm border border-purple-300 bg-purple-50 text-purple-700 rounded-md hover:bg-purple-100 font-semibold">
+            <Icon name="copy" className="w-4 h-4" /> 이전월 복사
+          </button>
+          <label className="flex items-center gap-1.5 px-2 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50 cursor-pointer">
+            <Icon name="upload" className="w-4 h-4" /> 엑셀 업로드
+            <input type="file" accept=".xlsx,.xls,.csv" onChange={handleUpload} className="hidden" />
+          </label>
+          <button onClick={handleDownload}
+            className="flex items-center gap-1.5 px-2 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50">
+            <Icon name="download" className="w-4 h-4" /> 엑셀 다운로드
+          </button>
+          <button onClick={() => { logChange('세미나교육활동', `저장 (${monthLabel})`); alert('저장되었습니다!'); }}
+            className="px-4 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">
+            저장
+          </button>
         </div>
 
         <div className="inline-flex gap-1 bg-slate-100 p-1 rounded-lg">
@@ -3187,13 +3249,6 @@ function App() {
             <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h3 className="text-base font-bold text-slate-900">{tab === 'actual' ? '실행' : '계획'} 상세 ({monthLabel})</h3>
               <div className="flex items-center gap-2 flex-wrap">
-                <label className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50 cursor-pointer">
-                  <Icon name="upload" className="w-4 h-4" /> 엑셀 업로드
-                  <input type="file" accept=".xlsx,.xls,.csv" onChange={handleUpload} className="hidden" />
-                </label>
-                <button onClick={handleDownload} className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-300 rounded-md hover:bg-slate-50">
-                  <Icon name="download" className="w-4 h-4" /> 양식/다운로드
-                </button>
                 <button onClick={addRow} className="flex items-center gap-1 px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700">
                   <Icon name="plus" className="w-3.5 h-3.5" /> 행 추가
                 </button>
