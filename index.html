@@ -960,6 +960,10 @@ const initialSeminarPlan = [
   { id: "plan_125", corp: "북경법인", hq: "북경법인", yearMonth: "2026-6", date: "待定", bigRegion: "2大区", city: "邢台", cityKr: "싱타이", item: "沙龙", nature: "经销商", topic: "BD&AR美格真病例沙龙", lecturer: "郭超", cost: 0.0, people: 0, revenue: 0, clinics: 0, newCust: 0, newDev: 0 },
   { id: "plan_126", corp: "북경법인", hq: "북경법인", yearMonth: "2026-6", date: "6.26", bigRegion: "3大区", city: "大连", cityKr: "다롄", item: "沙龙", nature: "经销商", topic: "BD植体优势及病例分析", lecturer: "姜全春", cost: 0.0, people: 0, revenue: 0, clinics: 0, newCust: 0, newDev: 0 },
 ];
+
+// 유형별 연간계획 시드 (캡처 표 값)
+const PLAN_TYPE_SEED = [{"group": "培训(교육)", "name": "초중고", "months": [2, 0, 4, 4, 6, 7, 4, 4, 6, 5, 5, 6], "people": 1590, "cost": 131.2, "match": ["初", "中", "高", "基础班", "高级班"], "id": "pt_1"}, {"group": "培训(교육)", "name": "살롱", "months": [5, 0, 7, 7, 7, 7, 6, 6, 7, 6, 7, 6], "people": 1070, "cost": 31.5, "match": ["沙龙"], "id": "pt_2"}, {"group": "培训(교육)", "name": "제3자", "months": [0, 0, 4, 5, 5, 5, 5, 6, 4, 6, 6, 5], "people": 1275, "cost": 5.8, "match": ["第三方"], "id": "pt_3"}, {"group": "培训(교육)", "name": "鼎聚鑫", "months": [0, 0, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1], "people": 240, "cost": 4.8, "match": ["鼎聚鑫"], "id": "pt_4"}, {"group": "培训(교육)", "name": "零基础", "months": [0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1], "people": 80, "cost": 26.4, "match": ["零基础", "零基础班"], "id": "pt_5"}, {"group": "培训(교육)", "name": "咨询师", "months": [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "people": 200, "cost": 11, "match": ["咨运", "咨询师"], "id": "pt_6"}, {"group": "培训(교육)", "name": "精品班", "months": [0, 0, 1, 1, 1, 2, 0, 0, 1, 1, 1, 0], "people": 270, "cost": 26.2, "match": ["精品班"], "id": "pt_7"}, {"group": "培训(교육)", "name": "DSO培训", "months": [0, 0, 3, 4, 5, 3, 4, 3, 5, 4, 5, 4], "people": 1125, "cost": 47, "match": ["DSO沙龙", "DSO经销商", "DSO直营", "DSO"], "id": "pt_8"}, {"group": "研讨(세미나)", "name": "协会研讨会", "months": [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0], "people": 320, "cost": 16.0, "match": ["学术会"], "id": "pt_9"}, {"group": "研讨(세미나)", "name": "线上直播", "months": [1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], "people": 2100, "cost": 4.2, "match": ["网课", "KOL网课"], "id": "pt_10"}, {"group": "研讨(세미나)", "name": "CEO살롱", "months": [0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0], "people": 300, "cost": 28.3, "match": ["CEO沙龙"], "id": "pt_11"}, {"group": "研讨(세미나)", "name": "국제살롱", "months": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0], "people": 500, "cost": 44, "match": ["国际沙龙", "国际活动"], "id": "pt_12"}, {"group": "KOL", "name": "KOL培训", "months": [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], "people": 105, "cost": 32.5, "match": ["KOL活动"], "id": "pt_13"}, {"group": "大赛(대회)", "name": "MegaMind", "months": [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0], "people": 100, "cost": 23, "match": ["MM案例大赛"], "id": "pt_14"}, {"group": "大赛(대회)", "name": "ELoading Comp.", "months": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], "people": 100, "cost": 20, "match": ["ELoading"], "id": "pt_15"}, {"group": "PKG", "name": "首尔大学课程", "months": [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1], "people": 120, "cost": 65.2, "match": ["首尔大学", "首尔大学课程"], "id": "pt_16"}, {"group": "PKG", "name": "MegaSchool(BD)", "months": [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], "people": 90, "cost": 56.7, "match": ["MegaSchool", "MegaSchool(BD)"], "id": "pt_17"}];
+
 const initialSeminarActual = [];
 
 /* 기존 데이터셋에 신규 본부 슬롯 보강 */
@@ -1199,6 +1203,9 @@ const LS = {
   seminar: 'mggedu_seminar_v1',
   seminarPlan: 'mggedu_seminarPlan_v1',
   seminarActual: 'mggedu_seminarActual_v1',
+  seminarRevenue: 'mggedu_seminarRevenue_v1',
+  seminarMatch: 'mggedu_seminarMatch_v1',
+  planTypes: 'mggedu_planTypes_v1',
   weeklyEntries: 'mggedu_weekly_entries_v1',
   changeLog: 'mggedu_changeLog_v1',
 };
@@ -1258,6 +1265,9 @@ function App() {
   const [seminar, setSeminar] = useState(() => loadLS(LS.seminar, initialSeminar));
   const [seminarPlan, setSeminarPlan] = useState(() => loadLS(LS.seminarPlan, initialSeminarPlan));
   const [seminarActual, setSeminarActual] = useState(() => loadLS(LS.seminarActual, initialSeminarActual));
+  const [seminarRevenue, setSeminarRevenue] = useState(() => loadLS(LS.seminarRevenue, []));
+  const [seminarMatch, setSeminarMatch] = useState(() => loadLS(LS.seminarMatch, {}));
+  const [planTypes, setPlanTypes] = useState(() => loadLS(LS.planTypes, PLAN_TYPE_SEED));
   const [weeklyEntries, setWeeklyEntries] = useState(() => loadLS(LS.weeklyEntries, {}));
   const [changeLog, setChangeLog] = useState(() => loadLS(LS.changeLog, []));
 
@@ -1269,7 +1279,7 @@ function App() {
   const [scSortOrder, setScSortOrder] = useState('asc');
   const [spSortKey, setSpSortKey] = useState(null);
   const [spSortOrder, setSpSortOrder] = useState('asc');
-  const [spTab, setSpTab] = useState('plan');
+  const [spTab, setSpTab] = useState('summary');
   const [spExpanded, setSpExpanded] = useState({});
 
   useEffect(() => { try { localStorage.setItem(LS.hq, selectedHQ); } catch(e){} }, [selectedHQ]);
@@ -1282,6 +1292,9 @@ function App() {
   useEffect(() => { saveLS(LS.seminar, seminar); }, [seminar]);
   useEffect(() => { saveLS(LS.seminarPlan, seminarPlan); }, [seminarPlan]);
   useEffect(() => { saveLS(LS.seminarActual, seminarActual); }, [seminarActual]);
+  useEffect(() => { saveLS(LS.seminarRevenue, seminarRevenue); }, [seminarRevenue]);
+  useEffect(() => { saveLS(LS.seminarMatch, seminarMatch); }, [seminarMatch]);
+  useEffect(() => { saveLS(LS.planTypes, planTypes); }, [planTypes]);
   useEffect(() => { saveLS(LS.weeklyEntries, weeklyEntries); }, [weeklyEntries]);
   useEffect(() => { saveLS(LS.changeLog, changeLog); }, [changeLog]);
 
@@ -1307,7 +1320,7 @@ function App() {
         else weeklySlim[k] = v;
       });
     } catch(e){ Object.assign(weeklySlim, weeklyLatest || {}); }
-    return { _app: 'MGG_EDU_MKT_v1', subCustomer, subCustomerMonth, packagePerson, seminar, seminarPlan, seminarActual, weeklyEntries: weeklySlim, _photos, changeLog };
+    return { _app: 'MGG_EDU_MKT_v1', subCustomer, subCustomerMonth, packagePerson, seminar, seminarPlan, seminarActual, seminarRevenue, seminarMatch, planTypes, weeklyEntries: weeklySlim, _photos, changeLog };
   };
 
   const handleCloudSave = async () => {
@@ -1367,6 +1380,9 @@ function App() {
       if (d.seminar) { setSeminar(d.seminar); saveLS(LS.seminar, d.seminar); }
       if (d.seminarPlan) { setSeminarPlan(d.seminarPlan); saveLS(LS.seminarPlan, d.seminarPlan); }
       if (d.seminarActual) { setSeminarActual(d.seminarActual); saveLS(LS.seminarActual, d.seminarActual); }
+      if (d.seminarRevenue) { setSeminarRevenue(d.seminarRevenue); saveLS(LS.seminarRevenue, d.seminarRevenue); }
+      if (d.seminarMatch) { setSeminarMatch(d.seminarMatch); saveLS(LS.seminarMatch, d.seminarMatch); }
+      if (d.planTypes) { setPlanTypes(d.planTypes); saveLS(LS.planTypes, d.planTypes); }
       if (d.weeklyEntries) { setWeeklyEntries(d.weeklyEntries); saveLS(LS.weeklyEntries, d.weeklyEntries); }
       if (d.changeLog) setChangeLog(d.changeLog);
       alert('✅ 클라우드 불러오기 완료!\n마지막 저장: ' + (data.lastSaved || '알 수 없음') + '\n\n화면 적용을 위해 새로고침합니다.');
@@ -1408,6 +1424,7 @@ function App() {
       const spCols = (r) => ({ 법인: r.corp||'', 본부: r.hq||'', 연월: r.yearMonth||'', 일자: r.date||'', 대구: r.bigRegion||'', 지역: r.cityKr||r.city||'', 지역원문: r.city||'', 항목: r.item||'', 구분: r.nature||'', 주제: r.topic||'', 교육내용: r.eduContent||'', 권역: r.bigRegion||'', 강사: r.lecturer||'', '비용(만위안)': r.cost||0, 총인원: r.people||0, '매출(만위안)': r.revenue||0, 치과수: r.clinics||0, 신규고객: r.newCust||0, 신규개발: r.newDev||0 });
       if ((seminarPlan||[]).length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(seminarPlan.map(spCols)), '세미나계획');
       if ((seminarActual||[]).length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(seminarActual.map(spCols)), '세미나실행');
+      if ((seminarRevenue||[]).length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(seminarRevenue.map(function(r){return {세미나ID: r.semId||'', 발주월: r.yearMonth||'', 고객: r.customer||'', '금액(만위안)': r.amount||0, 메모: r.note||''};})), '매출이력');
 
       const noteRows = Object.entries(weeklyEntries || {}).map(([k, v]) => ({ 원본키: k, 원본값: typeof v === 'string' ? v : JSON.stringify(v) }));
       if (noteRows.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(noteRows), '메모');
@@ -1445,6 +1462,9 @@ function App() {
         if (d.seminar) { setSeminar(d.seminar); saveLS(LS.seminar, d.seminar); }
         if (d.seminarPlan) { setSeminarPlan(d.seminarPlan); saveLS(LS.seminarPlan, d.seminarPlan); }
         if (d.seminarActual) { setSeminarActual(d.seminarActual); saveLS(LS.seminarActual, d.seminarActual); }
+        if (d.seminarRevenue) { setSeminarRevenue(d.seminarRevenue); saveLS(LS.seminarRevenue, d.seminarRevenue); }
+        if (d.seminarMatch) { setSeminarMatch(d.seminarMatch); saveLS(LS.seminarMatch, d.seminarMatch); }
+        if (d.planTypes) { setPlanTypes(d.planTypes); saveLS(LS.planTypes, d.planTypes); }
         if (d.weeklyEntries) { setWeeklyEntries(d.weeklyEntries); saveLS(LS.weeklyEntries, d.weeklyEntries); }
         if (d.changeLog) setChangeLog(d.changeLog);
         alert('✅ 복원 완료! 새로고침합니다.');
@@ -2540,7 +2560,23 @@ function App() {
     };
 
     const planAll = seminarPlan.filter(r => inYM(r) && inScope(r));
-    const actualAll = seminarActual.filter(r => inYM(r) && inScope(r));
+    const actualRaw = seminarActual.filter(r => inYM(r) && inScope(r));
+
+    // === 매출이력(발주 누적) 헬퍼 ===
+    // 각 실행 세미나(id)의 누적매출 = seminarRevenue 중 semId 일치 항목의 amount 합
+    const revenueForSem = (semId) => (seminarRevenue || []).filter(v => v.semId === semId).reduce((s, v) => s + (v.amount || 0), 0);
+    // 실행 행에 파생 매출(revenue) 부여 — 표/합계/CAC·LTV 계산에 사용
+    const actualAll = actualRaw.map(r => ({ ...r, revenue: revenueForSem(r.id) }));
+
+    // === 계획↔실행 자동 매칭 (일자 + 지역(도시)) + 수동보정(seminarMatch) ===
+    const matchKey = (r) => `${String(r.date || '').trim()}|${String(r.cityKr || r.city || '').trim()}`;
+    // 실행 세미나 id → 연결된 계획 id (수동 우선, 없으면 자동)
+    const planByKey = {};
+    seminarPlan.forEach(p => { const k = matchKey(p); if (!planByKey[k]) planByKey[k] = p.id; });
+    const linkedPlanId = (actRow) => {
+      if (seminarMatch && seminarMatch[actRow.id]) return seminarMatch[actRow.id]; // 수동 지정
+      return planByKey[matchKey(actRow)] || null; // 자동
+    };
 
     const sortRows = (arr) => {
       if (!spSortKey) return arr;
@@ -2590,7 +2626,7 @@ function App() {
       for (let mo = 1; mo <= 12; mo++) {
         const ym = `${curYear}-${mo}`;
         const p = sumOf(seminarPlan.filter(r => (r.yearMonth || '') === ym));
-        const a = sumOf(seminarActual.filter(r => (r.yearMonth || '') === ym));
+        const a = sumOf(seminarActual.filter(r => (r.yearMonth || '') === ym).map(r => ({ ...r, revenue: revenueForSem(r.id) })));
         arr.push({
           month: `${mo}월`,
           비용계획: +p.cost.toFixed(1), 비용실행: +a.cost.toFixed(1),
@@ -2630,6 +2666,36 @@ function App() {
       logChange('세미나 계획·실행 - 본부지정', `${id} → ${newHQ}`);
     };
     const toggleExpand = (id) => setSpExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+
+    // === 발주(매출이력) 추가/삭제 ===
+    const addRevenue = (sem) => {
+      const amtStr = prompt(`[${sem.cityKr || sem.city || '세미나'} / ${sem.date}] 추가 발주 금액 (만위안):`, '');
+      if (amtStr === null) return;
+      const amount = parseFloat(String(amtStr).replace(/,/g, ''));
+      if (isNaN(amount) || amount === 0) { alert('숫자 금액을 입력해 주세요.'); return; }
+      const moStr = prompt('발주 월 (숫자만, 예: 5):', String(displayMonth || 5));
+      if (moStr === null) return;
+      const mo = parseInt(moStr, 10) || (displayMonth || 5);
+      const customer = prompt('고객/대리상 (선택):', '') || '';
+      setSeminarRevenue(prev => [...prev, {
+        id: 'rev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        semId: sem.id, yearMonth: `${curYear}-${mo}`, customer: customer, amount: amount, note: '',
+      }]);
+      logChange('세미나 매출이력 - 발주추가', `${sem.id} / ${mo}월 / ${amount}만`);
+    };
+    const deleteRevenue = (rid) => {
+      if (!confirm('이 발주 이력을 삭제하시겠습니까?')) return;
+      setSeminarRevenue(prev => prev.filter(v => v.id !== rid));
+    };
+    const updateRevenue = (rid, field, value) => {
+      const fv = (field === 'amount') ? (parseFloat(value) || 0) : value;
+      setSeminarRevenue(prev => prev.map(v => v.id === rid ? { ...v, [field]: fv } : v));
+    };
+    // 실행 세미나 id → 표시용 라벨
+    const semLabel = (semId) => {
+      const s = seminarActual.find(r => r.id === semId);
+      return s ? `${s.date || ''} ${s.cityKr || s.city || ''} ${s.topic ? '· ' + s.topic.slice(0, 12) : ''}`.trim() : '(삭제된 세미나)';
+    };
 
     const assignableHQs = scope === 'all'
       ? REAL_HQS
@@ -2694,9 +2760,28 @@ function App() {
             id: (tab === 'actual' ? 'act_' : 'plan_') + Date.now() + '_' + i + '_' + Math.random().toString(36).slice(2, 6),
             yearMonth: `${curYear}-${monthGuess(p.date)}`,
           }));
-          setDataset(prev => [...prev, ...newRows]);
-          logChange('세미나 계획·실행', `엑셀 ${target} 업로드 ${newRows.length}건`);
-          alert(`✅ ${target} ${newRows.length}건 추가 완료!`);
+          if (tab === 'actual') {
+            // 실행: 세미나 원장엔 매출칸 없음 → 각 세미나의 업로드 매출을 '그달 발주 1건'으로 매출이력에 자동 등록
+            const revEntries = [];
+            newRows.forEach(nr => {
+              const amt = nr.revenue || 0;
+              if (amt > 0) {
+                revEntries.push({
+                  id: 'rev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                  semId: nr.id, yearMonth: nr.yearMonth, customer: '(업로드)', amount: amt, note: '엑셀 업로드 자동등록',
+                });
+              }
+              delete nr.revenue; // 원장엔 매출 저장 안 함(파생)
+            });
+            setSeminarActual(prev => [...prev, ...newRows]);
+            if (revEntries.length) setSeminarRevenue(prev => [...prev, ...revEntries]);
+            logChange('세미나 실행', `엑셀 업로드 ${newRows.length}건 (매출이력 ${revEntries.length}건 자동등록)`);
+            alert(`✅ 실행 ${newRows.length}건 추가 완료!\n매출이력 ${revEntries.length}건 자동 등록됨`);
+          } else {
+            setDataset(prev => [...prev, ...newRows]);
+            logChange('세미나 계획·실행', `엑셀 ${target} 업로드 ${newRows.length}건`);
+            alert(`✅ ${target} ${newRows.length}건 추가 완료!`);
+          }
         } catch (err) { alert('엑셀 읽기 실패: ' + err.message); }
       };
       reader.readAsArrayBuffer(file);
@@ -2740,7 +2825,7 @@ function App() {
         </div>
 
         <div className="inline-flex gap-1 bg-slate-100 p-1 rounded-lg">
-          {[['plan', '계획'], ['actual', '실행'], ['compare', '계획대비 실행']].map(([id, label]) => (
+          {[['summary', '서머리'], ['plan', '계획'], ['actual', '실행'], ['revenue', '매출이력'], ['compare', '계획대비 실행']].map(([id, label]) => (
             <button key={id} onClick={() => setSpTab(id)}
               className={`px-4 py-1.5 text-sm rounded-md font-medium ${spTab === id ? 'bg-white border border-slate-200 text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
               {label}
@@ -2750,6 +2835,7 @@ function App() {
 
         <MenuNoteBanner noteKey={`sp_note|${hq}|${yearMonth}`} monthLabel={monthLabel} hq={hq} year={curYear} weeklyEntries={weeklyEntries} setWeeklyEntries={setWeeklyEntries} />
 
+        {tab !== 'summary' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {metrics.map(m => {
             const r = pct(m.actual, m.plan);
@@ -2772,9 +2858,10 @@ function App() {
             );
           })}
         </div>
+        )}
 
         {/* === 중국법인 월별 추이 그래프 3종 === */}
-        {showCharts && typeof Recharts !== 'undefined' && (() => {
+        {tab !== 'summary' && showCharts && typeof Recharts !== 'undefined' && (() => {
           const { ResponsiveContainer, ComposedChart, LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } = Recharts;
           const chartBox = (title, node, sub) => (
             <div className="bg-white border border-slate-200 rounded-md p-3">
@@ -2826,9 +2913,219 @@ function App() {
           );
         })()}
 
-        {tab === 'compare' ? (
+        {tab === 'summary' ? (() => {
+          // 유형별 연간계획(계획) vs 실행(자동 카운트)
+          const actualForYear = seminarActual.filter(r => String(r.yearMonth || '').indexOf(`${curYear}-`) === 0 && (scope === 'all' ? true : scope === 'corp' ? r.corp === hq : r.hq === hq));
+          const monthOf = (r) => { const p = String(r.yearMonth || '').split('-'); return p[1] ? +p[1] : 0; };
+          // 실행 세미나를 유형별·월별로 카운트
+          const actCount = (matchArr, mo) => actualForYear.filter(r => monthOf(r) === mo && matchArr.indexOf(r.item) >= 0).length;
+          const actCountYear = (matchArr) => actualForYear.filter(r => matchArr.indexOf(r.item) >= 0).length;
+          const groups = [];
+          (planTypes || []).forEach(pt => { if (groups.indexOf(pt.group) < 0) groups.push(pt.group); });
+          const cellPct = (plan, act) => plan > 0 ? Math.round(act / plan * 100) : null;
+          const pcColor = (plan, act) => act === 0 ? 'text-slate-400' : (act >= plan ? 'text-emerald-600' : 'text-amber-600');
+          const updatePT = (id, field, value, idx) => {
+            setPlanTypes(prev => prev.map(p => {
+              if (p.id !== id) return p;
+              if (field === 'month') { const m = [...p.months]; m[idx] = parseInt(value, 10) || 0; return { ...p, months: m }; }
+              return { ...p, [field]: (field === 'name' ? value : (parseFloat(value) || 0)) };
+            }));
+          };
+          const totalCostPlan = (planTypes || []).reduce((s, p) => s + (p.cost || 0), 0);
+          // 월별 총계(계획/실행)
+          const monTotPlan = (mo) => (planTypes || []).reduce((s, p) => s + (p.months[mo - 1] || 0), 0);
+          const monTotAct = (mo) => actualForYear.filter(r => monthOf(r) === mo).length;
+          const yearTotPlan = (planTypes || []).reduce((s, p) => s + p.months.reduce((a, b) => a + b, 0), 0);
+          const yearTotAct = actualForYear.length;
+          const thS = "px-1.5 py-1.5 text-center border-b border-slate-300 text-slate-900 font-semibold text-xs";
+          return (
+            <div className="bg-white border border-slate-200 rounded-md p-4">
+              <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <h3 className="text-base font-bold text-slate-900">유형별 연간계획 · {curYear}년</h3>
+                <span className="text-xs text-slate-500">각 칸 = 계획 / <span className="text-emerald-600 font-semibold">실행</span> · 실행은 항목(분류)으로 자동 집계</span>
+              </div>
+              <div className="border border-slate-300 rounded overflow-x-auto">
+                <table className="text-sm" style={{ minWidth: '1180px', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr className="bg-slate-100">
+                      <th className={thS + " text-left sticky left-0 bg-slate-100 border-r border-slate-300"} style={{ minWidth: '110px' }}>분류</th>
+                      {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <th key={m} className={thS} style={{ minWidth: '58px' }}>{m}월</th>)}
+                      <th className={thS + " bg-indigo-50 border-l border-slate-300"}>합계</th>
+                      <th className={thS}>인원</th>
+                      <th className={thS}>비용</th>
+                      <th className={thS}>%</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groups.map(g => (
+                      <React.Fragment key={g}>
+                        <tr className="bg-indigo-50/60"><td colSpan={17} className="px-2 py-1 text-xs font-bold text-indigo-700 border-b border-slate-200">{g}</td></tr>
+                        {(planTypes || []).filter(p => p.group === g).map(p => {
+                          const planYear = p.months.reduce((a, b) => a + b, 0);
+                          const actYear = actCountYear(p.match);
+                          const pctOfTotal = totalCostPlan > 0 ? Math.round((p.cost || 0) / totalCostPlan * 100) : 0;
+                          return (
+                            <tr key={p.id} className="border-b border-slate-200 hover:bg-slate-50 text-slate-900">
+                              <td className="px-2 py-1 border-r border-slate-300 sticky left-0 bg-white text-xs" title={p.match.join(', ')}>{p.name}</td>
+                              {p.months.map((mv, idx) => {
+                                const av = actCount(p.match, idx + 1);
+                                return (
+                                  <td key={idx} className="px-1 py-1 text-center text-xs border-r border-slate-100" style={{ whiteSpace: 'nowrap' }}>
+                                    <EditableCell value={mv} type="number" align="center" onSave={(v) => updatePT(p.id, 'month', v, idx)} />
+                                    <span className="text-slate-300 mx-0.5">/</span>
+                                    <span className={pcColor(mv, av) + ' font-semibold'}>{av}</span>
+                                  </td>
+                                );
+                              })}
+                              <td className="px-1.5 py-1 text-center text-xs bg-indigo-50/50 border-l border-slate-300 font-semibold">{planYear}<span className="text-slate-300">/</span><span className="text-emerald-600">{actYear}</span></td>
+                              <td className="px-1.5 py-1 text-center text-xs"><EditableCell value={p.people || 0} type="number" align="center" onSave={(v) => updatePT(p.id, 'people', v)} /></td>
+                              <td className="px-1.5 py-1 text-center text-xs"><EditableCell value={p.cost || 0} type="number" align="center" onSave={(v) => updatePT(p.id, 'cost', v)} /></td>
+                              <td className="px-1.5 py-1 text-center text-xs text-slate-500">{pctOfTotal}%</td>
+                            </tr>
+                          );
+                        })}
+                      </React.Fragment>
+                    ))}
+                    <tr className="bg-slate-100 font-bold border-t-2 border-slate-400 text-slate-900">
+                      <td className="px-2 py-1.5 border-r border-slate-300 sticky left-0 bg-slate-100 text-xs">合计</td>
+                      {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => (
+                        <td key={m} className="px-1 py-1.5 text-center text-xs border-r border-slate-200">{monTotPlan(m)}<span className="text-slate-300">/</span><span className="text-emerald-600">{monTotAct(m)}</span></td>
+                      ))}
+                      <td className="px-1.5 py-1.5 text-center text-xs bg-indigo-100 border-l border-slate-300">{yearTotPlan}<span className="text-slate-300">/</span><span className="text-emerald-600">{yearTotAct}</span></td>
+                      <td className="px-1.5 py-1.5 text-center text-xs">{formatNumber((planTypes || []).reduce((s, p) => s + (p.people || 0), 0))}</td>
+                      <td className="px-1.5 py-1.5 text-center text-xs">{formatNumber(+totalCostPlan.toFixed(1))}</td>
+                      <td className="px-1.5 py-1.5 text-center text-xs">100%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* 법인별 집계 (자동) */}
+              <div className="mt-4 text-sm font-bold text-slate-900 mb-2">법인별 집계 (실행 자동)</div>
+              <div className="border border-slate-300 rounded overflow-x-auto">
+                <table className="text-sm" style={{ minWidth: '900px', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr className="bg-slate-100">
+                      <th className={thS + " text-left border-r border-slate-300"} style={{ minWidth: '90px' }}>법인</th>
+                      {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <th key={m} className={thS}>{m}월</th>)}
+                      <th className={thS + " bg-indigo-50 border-l border-slate-300"}>합계</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {['닝보법인', '북경법인'].map(corp => {
+                      const cRows = seminarActual.filter(r => String(r.yearMonth || '').indexOf(`${curYear}-`) === 0 && r.corp === corp);
+                      const cMon = (m) => cRows.filter(r => monthOf(r) === m).length;
+                      return (
+                        <tr key={corp} className="border-b border-slate-200 text-slate-900">
+                          <td className="px-2 py-1 border-r border-slate-300 text-xs font-semibold">{corp === '닝보법인' ? '닝보N' : '북경B'}</td>
+                          {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <td key={m} className="px-1 py-1 text-center text-xs text-emerald-600 border-r border-slate-100">{cMon(m)}</td>)}
+                          <td className="px-1.5 py-1 text-center text-xs bg-indigo-50/50 border-l border-slate-300 font-semibold text-emerald-600">{cRows.length}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-[11px] text-slate-500">
+                * 계획 숫자(앞)는 직접 수정할 수 있습니다. 실행 숫자(뒤, <span className="text-emerald-600 font-semibold">초록</span>)는 [실행] 탭에 등록된 세미나를 항목(분류)으로 자동 집계한 값입니다.
+                색: <span className="text-emerald-600">계획달성</span> · <span className="text-amber-600">미달</span> · <span className="text-slate-400">실행없음</span>. 분류에 마우스를 올리면 매칭되는 항목값이 보입니다.
+              </p>
+            </div>
+          );
+        })() : tab === 'revenue' ? (() => {
+          const revScoped = (seminarRevenue || []).filter(v => {
+            const s = seminarActual.find(r => r.id === v.semId);
+            if (!s) return false;
+            if (scope === 'corp') return s.corp === hq;
+            if (scope === 'hq') return s.hq === hq;
+            return true; // all
+          }).filter(v => inYM(v));
+          const revTotal = revScoped.reduce((a, v) => a + (v.amount || 0), 0);
+          return (
+            <div className="bg-white border border-slate-200 rounded-md p-4">
+              <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <h3 className="text-base font-bold text-slate-900">매출이력 (발주 누적) · {monthLabel}</h3>
+                <span className="text-sm text-slate-600">합계 <strong className="text-slate-900">{formatNumber(+revTotal.toFixed(2))}</strong> 만위안 · {revScoped.length}건</span>
+              </div>
+              <div className="border border-slate-300 rounded overflow-x-auto">
+                <table className="w-full text-sm" style={{ minWidth: '760px' }}>
+                  <thead>
+                    <tr className="bg-slate-100 border-b border-slate-300">
+                      <th className={th + " text-left"}>연결 세미나</th>
+                      <th className={th + " w-[90px]"}>발주월</th>
+                      <th className={th + " w-[140px]"}>고객/대리상</th>
+                      <th className={th + " w-[110px] text-right"}>금액<br/><span className="text-[10px] font-normal text-slate-500">(만위안)</span></th>
+                      <th className={th + " text-left"}>메모</th>
+                      <th className="px-2 py-2 font-semibold text-slate-900 text-xs w-[44px] text-center">삭제</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {revScoped.length === 0 ? (
+                      <tr><td colSpan={6} className="px-3 py-12 text-center text-slate-400">{monthLabel} 매출이력이 없습니다. [실행] 탭에서 세미나 행의 [+발주]로 추가하세요.</td></tr>
+                    ) : revScoped.map(v => (
+                      <tr key={v.id} className="border-b border-slate-200 hover:bg-slate-50 text-slate-900">
+                        <td className="px-2 py-1.5 border-r border-slate-300 text-slate-700">{semLabel(v.semId)}</td>
+                        <td className="px-2 py-1.5 border-r border-slate-300 text-center">
+                          <EditableCell value={(v.yearMonth || '').split('-')[1] ? (v.yearMonth.split('-')[1] + '월') : ''} align="center" onSave={(nv) => { const mm = parseInt(nv, 10); if (mm) updateRevenue(v.id, 'yearMonth', `${curYear}-${mm}`); }} />
+                        </td>
+                        <td className="px-2 py-1.5 border-r border-slate-300">
+                          <EditableCell value={v.customer || ''} onSave={(nv) => updateRevenue(v.id, 'customer', nv)} />
+                        </td>
+                        <td className="px-2 py-1.5 border-r border-slate-300 text-right font-semibold">
+                          <EditableCell value={v.amount || 0} type="number" align="right" onSave={(nv) => updateRevenue(v.id, 'amount', nv)} />
+                        </td>
+                        <td className="px-2 py-1.5 border-r border-slate-300">
+                          <EditableCell value={v.note || ''} onSave={(nv) => updateRevenue(v.id, 'note', nv)} />
+                        </td>
+                        <td className="px-2 py-1.5 text-center">
+                          <button onClick={() => deleteRevenue(v.id)} className="text-rose-400 hover:text-rose-600" title="삭제">
+                            <Icon name="trash" className="w-3.5 h-3.5 inline" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-[11px] text-slate-500">
+                * 매출이력은 각 세미나가 개발한 고객의 발주를 시점별로 누적한 내역입니다. 예: 1월 세미나 고객이 5월에 추가 발주하면 여기에 5월 발주로 한 줄 추가됩니다.
+                각 세미나의 <strong>누적매출 = 연결된 발주 합</strong>이며, 이를 바탕으로 LTV·LTV/CAC가 계산됩니다.
+              </p>
+            </div>
+          );
+        })() : tab === 'compare' ? (
           <div className="bg-white border border-slate-200 rounded-md p-4">
-            <h3 className="text-base font-bold text-slate-900 mb-3">본부별 계획대비 실행 ({monthLabel})</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-3">계획대비 실행 ({monthLabel})</h3>
+            {(() => {
+              // 계획↔실행 1:1 매칭 요약
+              const planScoped = seminarPlan.filter(r => inYM(r) && inScope(r));
+              const actScoped = seminarActual.filter(r => inYM(r) && inScope(r));
+              const matchedActIds = new Set();
+              const matchedPlanIds = new Set();
+              actScoped.forEach(a => { const pid = linkedPlanId(a); if (pid && planScoped.some(p => p.id === pid)) { matchedActIds.add(a.id); matchedPlanIds.add(pid); } });
+              const matchedCnt = matchedActIds.size;
+              const planOnly = planScoped.filter(p => !matchedPlanIds.has(p.id)).length; // 계획했으나 미실행
+              const actExtra = actScoped.filter(a => !matchedActIds.has(a.id)).length;   // 계획 외 추가실행
+              return (
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-md p-3 text-center">
+                    <div className="text-xs text-emerald-700">계획대로 실행(매칭)</div>
+                    <div className="text-2xl font-bold text-emerald-700">{matchedCnt}<span className="text-sm font-normal">건</span></div>
+                    <div className="text-[10px] text-slate-500 mt-1">일자+지역 자동매칭</div>
+                  </div>
+                  <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-center">
+                    <div className="text-xs text-amber-700">계획 미실행</div>
+                    <div className="text-2xl font-bold text-amber-700">{planOnly}<span className="text-sm font-normal">건</span></div>
+                    <div className="text-[10px] text-slate-500 mt-1">계획엔 있으나 실행 없음</div>
+                  </div>
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-center">
+                    <div className="text-xs text-blue-700">계획 외 추가실행</div>
+                    <div className="text-2xl font-bold text-blue-700">{actExtra}<span className="text-sm font-normal">건</span></div>
+                    <div className="text-[10px] text-slate-500 mt-1">계획 없이 추가로 실행</div>
+                  </div>
+                </div>
+              );
+            })()}
             <div className="border border-slate-300 rounded overflow-x-auto">
               <table className="w-full text-sm" style={{ minWidth: '1040px' }}>
                 <thead>
@@ -2843,7 +3140,7 @@ function App() {
                 <tbody>
                   {(scope === 'all' ? REAL_HQS.concat(['미배정']) : (scope === 'corp' ? (CORP_HQS[hq] || []).concat(hq === '닝보법인' ? ['미배정'] : []) : [hq])).map(h => {
                     const pRows = seminarPlan.filter(r => inYM(r) && r.hq === h);
-                    const aRows = seminarActual.filter(r => inYM(r) && r.hq === h);
+                    const aRows = seminarActual.filter(r => inYM(r) && r.hq === h).map(r => ({ ...r, revenue: revenueForSem(r.id) }));
                     if (pRows.length === 0 && aRows.length === 0) return null;
                     const ps = sumOf(pRows), as = sumOf(aRows);
                     const cell = (act, plan, dec) => {
@@ -2918,7 +3215,7 @@ function App() {
                     <th className={th + " w-[84px] text-right bg-blue-50"}>CAC<br/><span className="text-[10px] font-normal text-slate-500">(비용÷고객)</span></th>
                     <th className={th + " w-[96px] text-right bg-blue-50"}>신규고객당 매출<br/><span className="text-[10px] font-normal text-slate-500">(매출÷고객)</span></th>
                     <th className={th + " w-[70px] text-right bg-blue-100"}>LTV/CAC<br/><span className="text-[10px] font-normal text-slate-500">(배)</span></th>
-                    <th className="px-2 py-2 font-semibold text-slate-900 text-xs w-[44px] text-center">더보기</th>
+                    <th className="px-2 py-2 font-semibold text-slate-900 text-xs w-[64px] text-center">{tab==='actual'?'발주/더보기':'더보기'}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -2963,7 +3260,12 @@ function App() {
                           <td className="px-1.5 py-2 border-r border-slate-300 text-right font-semibold bg-blue-50/40" title="비용 ÷ 신규고객">{cac === null ? <span className="text-slate-300">-</span> : formatNumber(cac)}</td>
                           <td className="px-1.5 py-2 border-r border-slate-300 text-right font-semibold bg-blue-50/40" title="매출 ÷ 신규고객">{rpc === null ? <span className="text-slate-300">-</span> : formatNumber(rpc)}</td>
                           <td className={`px-1.5 py-2 border-r border-slate-300 text-right font-bold bg-blue-100/60 ${roiColor(roi)}`} title="매출 ÷ 비용">{roi === null ? <span className="text-slate-300">-</span> : roi + '배'}</td>
-                          <td className="px-2 py-1 text-center">
+                          <td className="px-2 py-1 text-center whitespace-nowrap">
+                            {tab === 'actual' && (
+                              <button onClick={() => addRevenue(row)} className="text-emerald-500 hover:text-emerald-700 mr-1" title="발주(매출) 추가">
+                                <Icon name="plus" className="w-3.5 h-3.5 inline" />
+                              </button>
+                            )}
                             <button onClick={() => toggleExpand(row.id)} className="text-slate-400 hover:text-blue-600" title="더보기">
                               <Icon name={expanded ? 'chevronDown' : 'chevronRight'} className="w-4 h-4 inline" />
                             </button>
@@ -3014,9 +3316,17 @@ function App() {
                                       </td>
                                     </tr>
                                     <tr className="border-b border-slate-200">
-                                      <th className="px-2 py-2 bg-slate-100 border-r border-slate-300 font-semibold text-slate-900 text-left">매출<br/><span className="text-xs font-normal text-slate-500">(만위안)</span></th>
+                                      <th className="px-2 py-2 bg-slate-100 border-r border-slate-300 font-semibold text-slate-900 text-left">{tab === 'actual' ? '누적매출' : '매출'}<br/><span className="text-xs font-normal text-slate-500">(만위안)</span></th>
                                       <td className="px-2 py-2 text-right border-r border-slate-300" colSpan={5}>
-                                        <EditableCell value={row.revenue || 0} type="number" align="right" onSave={(v) => updateRow(row.id, 'revenue', v)} />
+                                        {tab === 'actual' ? (
+                                          <div className="flex items-center justify-end gap-2">
+                                            <span className="font-semibold text-slate-900">{formatNumber(row.revenue || 0)}</span>
+                                            <span className="text-[11px] text-slate-500">(발주 {(seminarRevenue || []).filter(v => v.semId === row.id).length}건 · 매출이력 탭에서 관리)</span>
+                                            <button onClick={() => addRevenue(row)} className="px-2 py-0.5 text-xs bg-emerald-600 text-white rounded hover:bg-emerald-700">+발주</button>
+                                          </div>
+                                        ) : (
+                                          <EditableCell value={row.revenue || 0} type="number" align="right" onSave={(v) => updateRow(row.id, 'revenue', v)} />
+                                        )}
                                       </td>
                                     </tr>
                                     <tr>
