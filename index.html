@@ -732,7 +732,8 @@ main .overflow-x-auto thead tr,main .overflow-auto thead tr{background:#f1f5f9}
 <script id="mp-app">
 const PD = window.__PD__;
 const store={get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}},
- set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+ set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}
+  try{if(window.__cloudDirty)window.__cloudDirty();}catch(e){}}};
 let EXE = store.get('mkplan_exe_v1')||{};   // 실행 입력 {key:{c:횟수,p:인원,v:비용,r:매출,memo}}
 let TXT = store.get('mkplan_txt_v1')||{};
 let RATE = store.get('mkplan_rate_v1')||{usd:1250,eur:1630};
@@ -2201,7 +2202,7 @@ const Icon = ({ name, className = "w-4 h-4" }) => {
    본 앱 전용으로 새 Google Sheets + 새 Apps Script를 배포하고,
    그 웹앱 URL을 아래 GOOGLE_SCRIPT_URL 에 붙여넣으세요.
    (Apps Script 코드는 기존 대시보드용과 동일한 것을 그대로 재사용하면 됩니다) */
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwqdrw3JgKFoupmZubzy1Np6rBwsOgSXLtbgWoFmpcUTNZg4iAhh12o1vfw7PTnEllIg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby16T4yHy49tNQ2L28xSpKkbWFY-yg6M5Q71msC0au_iekhxn1pCknrZZuxfRxH9kazog/exec';
 const NO_URL_MSG =
   '클라우드 URL이 설정되지 않았습니다.\n\n' +
   '이 앱 전용 Google Apps Script 웹앱을 새로 배포한 뒤,\n' +
@@ -2904,6 +2905,15 @@ function App() {
   useEffect(() => { if (!window.MP) return; const m = (filterMonth === 0 ? 12 : filterMonth);
     if (window.MP.st.m !== m) { window.MP.st.m = m; window.MP.save(); setMpTick(t => t + 1); } }, [filterMonth]);
   useEffect(() => { if (window.MP) window.MP.onRender = () => setMpTick(t => t + 1); }, []);
+  const cloudTouch = () => {
+    if (!cloudAuto || !cloudReady.current || !GOOGLE_SCRIPT_URL) return;
+    setCloudState('dirty');
+    if (cloudTimer.current) clearTimeout(cloudTimer.current);
+    cloudTimer.current = setTimeout(() => { handleCloudSave(true); }, 6000);
+  };
+  useEffect(() => { window.__cloudDirty = cloudTouch; return () => { window.__cloudDirty = null; }; });
+  useEffect(() => { const t = setTimeout(() => { cloudReady.current = true; }, 4000); return () => clearTimeout(t); }, []);
+  useEffect(() => { cloudTouch(); }, [subCustomer, subCustomerMonth, packagePerson, seminar, seminarPlan, seminarActual, seminarRevenue, seminarMatch, planTypes, weeklyEntries]);
   useEffect(() => { const el = document.getElementById('mpwrap'); if (el && window.MP) window.MP.bind(el); if (window.MP && window.MP.i18n) window.MP.i18n(); });
   const MK_SUB = [['cal','① 마케팅활동캘린더'],['planM','② 마케팅활동목표'],['mcmp','③ 마케팅활동대비실행'],['pkg','④ 마케팅활동실행'],['mrev','⑤ 마케팅매출이력'],['pol','★ PKG정책']];
   const MK_TABS = [['dept','① 부서별 내역'],['comp','② 항목별 비교'],['acct','③ 과목별 분석'],['budget','④ 예산'],['acts','⑤ 활동 내역']];
@@ -2911,6 +2921,12 @@ function App() {
   useEffect(() => { if (spTab === 'actual' || spTab === 'summary') setSpTab('plan'); }, [spTab]);
   useEffect(() => { if (mpTab === 'report' || mpTab === 'exec') setMpTab('pkg'); }, [mpTab]);
   const [spKpiOpen, setSpKpiOpen] = useState(false);
+  const [cloudState, setCloudState] = useState('idle');
+  const [cloudAt, setCloudAt] = useState(() => { try { const v = localStorage.getItem('mggedu_last_cloud_save'); return v ? new Date(v).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : ''; } catch(e){ return ''; } });
+  const [cloudAuto, setCloudAuto] = useState(() => { try { return localStorage.getItem('mggedu_cloud_auto') !== '0'; } catch(e){ return true; } });
+  const cloudTimer = useRef(null);
+  const cloudReady = useRef(false);
+  useEffect(() => { try { localStorage.setItem('mggedu_cloud_auto', cloudAuto ? '1' : '0'); } catch(e){} }, [cloudAuto]);
   const [menuCollapsed, setMenuCollapsed] = useState({ pkg: true, sp: true });
   const [orgOpen, setOrgOpen] = useState(false);
   const mpView = (tab) => (
@@ -2959,11 +2975,13 @@ function App() {
         else weeklySlim[k] = v;
       });
     } catch(e){ Object.assign(weeklySlim, weeklyLatest || {}); }
-    return { _app: 'MGG_EDU_MKT_v1', subCustomer, subCustomerMonth, packagePerson, seminar, seminarPlan, seminarActual, seminarRevenue, seminarMatch, planTypes, weeklyEntries: weeklySlim, _photos, changeLog };
+    const _mk = {}; ['mkplan_ovr_v1','mkplan_exe_v1','mkplan_txt_v1','mkplan_st_v1','mkplan_wk_v1','mkplan_rate_v1'].forEach(function(k){ try { const v = localStorage.getItem(k); if (v) _mk[k] = v; } catch(e){} });
+    return { _app: 'MGG_EDU_MKT_v1', subCustomer, subCustomerMonth, packagePerson, seminar, seminarPlan, seminarActual, seminarRevenue, seminarMatch, planTypes, weeklyEntries: weeklySlim, _photos, changeLog, _mkplan: _mk };
   };
 
-  const handleCloudSave = async () => {
-    if (!GOOGLE_SCRIPT_URL) { alert(NO_URL_MSG); return; }
+  const handleCloudSave = async (silent) => {
+    if (!GOOGLE_SCRIPT_URL) { if (!silent) alert(NO_URL_MSG); return; }
+    if (silent) setCloudState('saving');
     const payload = buildPayload();
     const rawJson = JSON.stringify(payload);
     const rawMB = rawJson.length / 1048576;
@@ -2983,16 +3001,19 @@ function App() {
       try { const j = await res.json(); ok = j.ok !== false; errMsg = j.error || ''; } catch (e) { ok = res.ok; }
       if (ok) {
         localStorage.setItem('mggedu_last_cloud_save', new Date().toISOString());
-        alert('✅ 클라우드 저장 완료!\n저장 시각: ' + new Date().toLocaleString('ko-KR') + '\n' + sizeInfo);
+        setCloudAt(new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })); setCloudState('ok');
+        if (!silent) alert('✅ 클라우드 저장 완료!\n저장 시각: ' + new Date().toLocaleString('ko-KR') + '\n' + sizeInfo);
       } else {
-        alert('❌ 저장 실패' + (errMsg ? ': ' + errMsg : ''));
+        setCloudState('err');
+        if (!silent) alert('❌ 저장 실패' + (errMsg ? ': ' + errMsg : ''));
       }
     } catch (e) {
       try {
         await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: bodyStr });
         localStorage.setItem('mggedu_last_cloud_save', new Date().toISOString());
-        alert('✅ 전송 완료 (응답 확인 불가 모드)\n' + sizeInfo + '\n\n⚠️ [클라우드 불러오기]로 정상 저장 여부를 확인해 주세요.');
-      } catch (e2) { alert('❌ 저장 실패: ' + e2.message); }
+        setCloudAt(new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })); setCloudState('ok');
+        if (!silent) alert('✅ 전송 완료 (응답 확인 불가 모드)\n' + sizeInfo + '\n\n⚠️ [클라우드 불러오기]로 정상 저장 여부를 확인해 주세요.');
+      } catch (e2) { setCloudState('err'); if (!silent) alert('❌ 저장 실패: ' + e2.message); }
     }
   };
 
@@ -3024,6 +3045,7 @@ function App() {
       if (d.planTypes) { setPlanTypes(d.planTypes); saveLS(LS.planTypes, d.planTypes); }
       if (d.weeklyEntries) { setWeeklyEntries(d.weeklyEntries); saveLS(LS.weeklyEntries, d.weeklyEntries); }
       if (d.changeLog) setChangeLog(d.changeLog);
+      if (d._mkplan && typeof d._mkplan === 'object') { try { Object.keys(d._mkplan).forEach(function(k){ localStorage.setItem(k, d._mkplan[k]); }); } catch(e){} }
       alert('✅ 클라우드 불러오기 완료!\n마지막 저장: ' + (data.lastSaved || '알 수 없음') + '\n\n화면 적용을 위해 새로고침합니다.');
       setTimeout(() => window.location.reload(), 400);
     } catch (e) { alert('❌ 불러오기 실패: ' + e.message); }
@@ -3106,6 +3128,7 @@ function App() {
         if (d.planTypes) { setPlanTypes(d.planTypes); saveLS(LS.planTypes, d.planTypes); }
         if (d.weeklyEntries) { setWeeklyEntries(d.weeklyEntries); saveLS(LS.weeklyEntries, d.weeklyEntries); }
         if (d.changeLog) setChangeLog(d.changeLog);
+      if (d._mkplan && typeof d._mkplan === 'object') { try { Object.keys(d._mkplan).forEach(function(k){ localStorage.setItem(k, d._mkplan[k]); }); } catch(e){} }
         alert('✅ 복원 완료! 새로고침합니다.');
         setTimeout(() => window.location.reload(), 400);
       } catch (err) { alert('복원 실패: ' + err.message); }
@@ -3815,7 +3838,15 @@ function App() {
             <Icon name="upload" className="w-4 h-4" /><span>복원</span>
             <input type="file" accept=".xlsx,.xls" onChange={handleFullRestore} className="hidden" />
           </label>
-          <button onClick={handleCloudSave}
+          <span className="flex items-center gap-1 px-2 py-1 text-[11px] rounded border border-slate-300 bg-white">
+            <span className={`w-1.5 h-1.5 rounded-full ${cloudState === 'saving' ? 'bg-amber-500' : cloudState === 'err' ? 'bg-rose-500' : cloudState === 'dirty' ? 'bg-slate-400' : 'bg-emerald-500'}`}></span>
+            <span className="text-slate-600">{cloudState === 'saving' ? '저장 중' : cloudState === 'err' ? '저장 실패' : cloudState === 'dirty' ? '변경됨' : (cloudAt ? cloudAt + ' 저장됨' : '클라우드')}</span>
+          </span>
+          <label className="flex items-center gap-1 px-2 py-1 text-[11px] rounded border border-slate-300 bg-white cursor-pointer">
+            <input type="checkbox" checked={cloudAuto} onChange={(e) => setCloudAuto(e.target.checked)} />
+            <span className="text-slate-700 font-semibold">자동저장</span>
+          </label>
+          <button onClick={() => handleCloudSave(false)}
             className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold">
             <Icon name="cloud" className="w-4 h-4" /><span>클라우드 저장</span>
           </button>
@@ -5756,7 +5787,7 @@ function App() {
             <span className="text-xs text-slate-400 truncate">{selectedMenu === 'mk' ? '닝보 · 북경' : (selectedMenu === 'kcx' ? '25년 · 26년 본사보고' : selectedHQ)}</span>
           </div>
           <span className="text-xs text-slate-400 hidden md:block">
-            메가젠 중화영업본부 · {new Date().toLocaleDateString('ko-KR')} · v260807-0144
+            메가젠 중화영업본부 · {new Date().toLocaleDateString('ko-KR')} · v260807-0205
           </span>
         </header>
         {selectedMenu !== 'mk' && renderTopBar()}
